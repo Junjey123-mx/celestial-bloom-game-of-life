@@ -41,4 +41,40 @@ impl Framebuffer {
     pub fn render_to_file(&self, file_name: &str) {
         self.image.export_image(file_name);
     }
+
+    pub fn width(&self) -> i32 {
+        self.image.width()
+    }
+
+    pub fn height(&self) -> i32 {
+        self.image.height()
+    }
+
+    pub fn get_color(&self, x: i32, y: i32) -> Color {
+        if x >= 0 && x < self.width() && y >= 0 && y < self.height() {
+            self.image.get_color(x, y)
+        } else {
+            self.background_color
+        }
+    }
+
+    pub fn swap_buffers(&self, window: &mut RaylibHandle, raylib_thread: &RaylibThread) {
+        if let Ok(texture) = window.load_texture_from_image(raylib_thread, &self.image) {
+            let screen_width = window.get_screen_width() as f32;
+            let screen_height = window.get_screen_height() as f32;
+
+            let mut renderer = window.begin_drawing(raylib_thread);
+
+            renderer.clear_background(self.background_color);
+
+            renderer.draw_texture_pro(
+                &texture,
+                Rectangle::new(0.0, 0.0, self.width() as f32, self.height() as f32),
+                Rectangle::new(0.0, 0.0, screen_width, screen_height),
+                Vector2::new(0.0, 0.0),
+                0.0,
+                Color::WHITE,
+            );
+        }
+    }
 }
