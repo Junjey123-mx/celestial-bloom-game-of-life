@@ -1,8 +1,10 @@
 mod framebuffer;
 mod game_of_life;
+mod patterns;
 
 use framebuffer::Framebuffer;
 use game_of_life::GameOfLife;
+use patterns::composition::seed_flower;
 use raylib::prelude::*;
 use std::time::{Duration, Instant};
 
@@ -13,7 +15,7 @@ fn main() {
     const FRAMEBUFFER_WIDTH: i32 = 160;
     const FRAMEBUFFER_HEIGHT: i32 = 120;
 
-    const GENERATION_DELAY_MS: u64 = 250;
+    const GENERATION_DELAY_MS: u64 = 100;
 
     let live_color = Color::new(120, 220, 255, 255);
     let dead_color = Color::WHITE;
@@ -32,10 +34,7 @@ fn main() {
     framebuffer.clear();
     framebuffer.set_current_color(live_color);
 
-    // Blinker de período 2.
-    framebuffer.point(79, 60);
-    framebuffer.point(80, 60);
-    framebuffer.point(81, 60);
+    seed_flower(&mut framebuffer);
 
     let game = GameOfLife::new(live_color, dead_color);
     let mut last_generation = Instant::now();
