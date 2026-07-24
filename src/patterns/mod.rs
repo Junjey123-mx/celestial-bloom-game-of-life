@@ -1,4 +1,6 @@
 pub mod composition;
+pub mod oscillators;
+pub mod spaceships;
 pub mod still_lifes;
 
 use crate::framebuffer::Framebuffer;

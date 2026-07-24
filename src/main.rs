@@ -4,7 +4,7 @@ mod patterns;
 
 use framebuffer::Framebuffer;
 use game_of_life::GameOfLife;
-use patterns::composition::seed_flower;
+use patterns::composition::seed_celestial_bloom;
 use raylib::prelude::*;
 use std::time::{Duration, Instant};
 
@@ -34,7 +34,7 @@ fn main() {
     framebuffer.clear();
     framebuffer.set_current_color(live_color);
 
-    seed_flower(&mut framebuffer);
+    seed_celestial_bloom(&mut framebuffer);
 
     let game = GameOfLife::new(live_color, dead_color);
     let mut last_generation = Instant::now();
