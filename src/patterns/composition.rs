@@ -54,3 +54,46 @@ pub fn seed_celestial_bloom(framebuffer: &mut Framebuffer) {
     // Zona inferior derecha. Se refleja para viajar hacia el borde.
     place_pattern_flipped(framebuffer, 120, 96, LWSS, true, false);
 }
+
+#[cfg(test)]
+mod tests {
+    use super::seed_flower;
+    use crate::{framebuffer::Framebuffer, game_of_life::GameOfLife};
+    use raylib::prelude::Color;
+
+    fn snapshot(framebuffer: &Framebuffer, live_color: Color) -> Vec<bool> {
+        let mut cells = Vec::new();
+
+        for y in 0..framebuffer.height() {
+            for x in 0..framebuffer.width() {
+                cells.push(framebuffer.get_color(x, y) == live_color);
+            }
+        }
+
+        cells
+    }
+
+    #[test]
+    fn celestial_flower_remains_stable() {
+        let live_color = Color::new(120, 220, 255, 255);
+        let dead_color = Color::WHITE;
+
+        let mut framebuffer = Framebuffer::new(160, 120);
+
+        framebuffer.set_background_color(dead_color);
+        framebuffer.clear();
+        framebuffer.set_current_color(live_color);
+
+        seed_flower(&mut framebuffer);
+
+        let initial_state = snapshot(&framebuffer, live_color);
+
+        let game = GameOfLife::new(live_color, dead_color);
+
+        for _ in 0..10 {
+            game.next_generation(&mut framebuffer);
+        }
+
+        assert_eq!(snapshot(&framebuffer, live_color), initial_state);
+    }
+}
